@@ -180,6 +180,19 @@ class TestDatasetPyTree:
         assert result.wires[0] == 0
         assert isinstance(result.wires[0], int)
 
+    @pytest.mark.parametrize("requires_grad", [True, False])
+    @pytest.mark.parametrize("op_fn", [lambda x: qp.RX(x, wires=0), qp.GlobalPhase])
+    def test_autograd_leaves_preserve_requires_grad(self, op_fn, requires_grad):
+        """Test that the ``requires_grad`` attribute of ``autograd`` leaves is preserved,
+        including when all leaves share the same dtype kind."""
+        op = op_fn(qp.numpy.tensor(0.5, requires_grad=requires_grad))
+
+        result = DatasetPyTree(op).get_value()
+
+        qp.assert_equal(result, op)
+        assert qp.math.get_interface(result.data[0]) == "autograd"
+        assert result.data[0].requires_grad == requires_grad
+
 
 @pytest.mark.parametrize("shots", [None, 1, [1, 2]])
 def test_quantum_scripts(shots):

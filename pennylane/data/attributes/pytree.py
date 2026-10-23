@@ -100,12 +100,13 @@ def _storable_as_array(leaves: list) -> bool:
 
     Returns ``False`` for unicode-string leaves (e.g. string wire labels), which an HDF5 array
     reads back as ``bytes``; for ragged, mixed, or object leaves, which cannot be stacked into
-    one array; and for non-numpy leaves such as ``torch``/``jax`` tensors, which ``DatasetArray``
-    does not handle. That interface check also guards the ``np.asarray`` calls below, which would
-    otherwise raise on e.g. a ``torch`` tensor that requires grad. Numeric and ``bytes`` leaves
-    use the array path, as they did before string leaves were special-cased. ``"biufcS"`` are the
-    numpy dtype ``kind`` codes that round-trip safely through an HDF5 array: boolean, signed and
-    unsigned integer, float, complex, and byte string.
+    one array; for ``autograd`` leaves, whose ``requires_grad`` attribute would be lost when they
+    are stacked into one array; and for other non-numpy leaves such as ``torch``/``jax`` tensors,
+    which ``DatasetArray`` does not handle. That interface check also guards the ``np.asarray``
+    calls below, which would otherwise raise on e.g. a ``torch`` tensor that requires grad.
+    Numeric and ``bytes`` leaves use the array path, as they did before string leaves were
+    special-cased. ``"biufcS"`` are the numpy dtype ``kind`` codes that round-trip safely through
+    an HDF5 array: boolean, signed and unsigned integer, float, complex, and byte string.
 
     Also returns ``False`` when the leaves do not all share the same dtype ``kind``. Stacking
     leaves of different kinds into one array promotes them to a common dtype, which silently
@@ -115,7 +116,7 @@ def _storable_as_array(leaves: list) -> bool:
     as byte strings of different lengths (``"S2"`` and ``"S3"``, both kind ``"S"``) or integers of
     different sizes, to use the efficient array path.
     """
-    if any(get_interface(leaf) not in ("numpy", "autograd") for leaf in leaves):
+    if any(get_interface(leaf) != "numpy" for leaf in leaves):
         return False
 
     leaf_arrays = [np.asarray(leaf) for leaf in leaves]

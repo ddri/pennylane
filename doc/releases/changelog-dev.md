@@ -2358,6 +2358,11 @@
   the gates produced by the captured decomposition.
   [(#10351)](https://github.com/PennyLaneAI/pennylane/pull/10351)
 
+* :class:`~.data.Dataset` no longer drops the ``requires_grad`` attribute of ``autograd``
+  parameters when serializing PyTrees, such as operators, whose leaves all share the same
+  dtype kind (e.g. ``qp.GlobalPhase(pnp.tensor(0.5, requires_grad=True))``).
+  [(#XXXX)](https://github.com/PennyLaneAI/pennylane/pull/XXXX)
+
 
 <h3>Contributors ✍️</h3>
 
@@ -2394,6 +2399,7 @@ Mudit Pandey,
 Andrija Paurevic,
 Francesco Pernice Botta,
 David D.W. Ren,
+David Ryan,
 Jay Soni,
 Jaume Villasante,
 Paul Haochen Wang,
