@@ -544,3 +544,14 @@ class TestGQSPTimeEvolution:
         )
         assert len(decomp) == 1
         assert decomp[0].gate.op_type == qre.GQSP
+
+    def test_default_poly_approx_precision(self):
+        """Test that the default poly_approx_precision is taken from the ResourceConfig."""
+        op = qre.RX(0.1, wires=0)
+        hamsim = qre.GQSPTimeEvolution(op, time=1.0, one_norm=1.0)
+
+        config = qre.ResourceConfig()
+        precision = config.resource_op_precisions[qre.GQSPTimeEvolution]["poly_approx_precision"]
+        expected = qre.estimate(qre.GQSPTimeEvolution(op, 1.0, 1.0, precision))
+
+        assert qre.estimate(hamsim) == expected

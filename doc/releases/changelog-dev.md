@@ -2098,6 +2098,11 @@
 
 <h3>Bug fixes 🐛</h3>
 
+* :class:`~.estimator.GQSPTimeEvolution` no longer raises a ``TypeError`` during resource
+  estimation when ``poly_approx_precision`` is not provided. The default value is now taken from
+  :class:`~.estimator.ResourceConfig`.
+  [(#XXXX)](https://github.com/PennyLaneAI/pennylane/pull/XXXX)
+
 * :func:`~.core.abstractify` no longer raises an error for an :class:`~.Operator2` whose dynamic
   argument is a SciPy sparse matrix, such as a :class:`~.QubitUnitary` built from a ``csr_matrix``.
   [(#10360)](https://github.com/PennyLaneAI/pennylane/pull/10360)

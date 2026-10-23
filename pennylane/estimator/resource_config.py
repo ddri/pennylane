@@ -142,7 +142,7 @@ class ResourceConfig:
             },
             GQSP: {"rotation_precision": None},
             QSP: {"rotation_precision": None},
-            GQSPTimeEvolution: {"poly_approx_precision": None},
+            GQSPTimeEvolution: {"poly_approx_precision": _DEFAULT_PRECISION},
         }
         self._custom_decomps = {}
         self._adj_custom_decomps = {}
