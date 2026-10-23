@@ -47,6 +47,13 @@ class TestIdentity:
         expected = CompressedResourceOp(Identity, 1, {})
         assert Identity.resource_rep() == expected
 
+    @pytest.mark.parametrize("wire_labels", [None, [0], [0, 1], [0, 1, 2]])
+    def test_resource_rep_from_op(self, wire_labels):
+        """Test that the compressed representation keeps the number of wires"""
+        op = Identity(wire_labels)
+        expected = CompressedResourceOp(Identity, op.num_wires, {})
+        assert op.resource_rep_from_op() == expected
+
     def test_resource_params(self):
         """Test the resource params are correct"""
         op = Identity(0)
@@ -116,6 +123,13 @@ class TestGlobalPhase:
         """Test the compressed representation"""
         expected = CompressedResourceOp(GlobalPhase, 1, {})
         assert GlobalPhase.resource_rep() == expected
+
+    @pytest.mark.parametrize("wire_labels", [None, [0], [0, 1], [0, 1, 2]])
+    def test_resource_rep_from_op(self, wire_labels):
+        """Test that the compressed representation keeps the number of wires"""
+        op = GlobalPhase(wire_labels)
+        expected = CompressedResourceOp(GlobalPhase, op.num_wires, {})
+        assert op.resource_rep_from_op() == expected
 
     def test_resource_params(self):
         """Test the resource params are correct"""

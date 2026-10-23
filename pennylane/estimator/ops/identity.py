@@ -70,6 +70,10 @@ class Identity(ResourceOperator):
         the operator that are needed to compute the resources."""
         return CompressedResourceOp(cls, cls.num_wires, {})
 
+    def resource_rep_from_op(self) -> CompressedResourceOp:
+        r"""Returns a compressed representation directly from the operator"""
+        return CompressedResourceOp(self.__class__, self.num_wires, {})
+
     @classmethod
     def resource_decomp(cls) -> list[GateCount]:
         r"""Returns a list representing the resources of the operator. Each object represents a quantum gate
@@ -196,6 +200,10 @@ class GlobalPhase(ResourceOperator):
         r"""Returns a compressed representation containing only the parameters of
         the operator that are needed to compute the resources."""
         return CompressedResourceOp(cls, cls.num_wires, {})
+
+    def resource_rep_from_op(self) -> CompressedResourceOp:
+        r"""Returns a compressed representation directly from the operator"""
+        return CompressedResourceOp(self.__class__, self.num_wires, {})
 
     @classmethod
     def resource_decomp(cls) -> list[GateCount]:
