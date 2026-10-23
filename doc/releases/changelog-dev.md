@@ -2098,6 +2098,10 @@
 
 <h3>Bug fixes 🐛</h3>
 
+* ``default.clifford`` now returns one result per shot partition when executed with a shot
+  vector, instead of combining all shots into a single malformed result.
+  [(#XXXX)](https://github.com/PennyLaneAI/pennylane/pull/XXXX)
+
 * :func:`~.core.abstractify` no longer raises an error for an :class:`~.Operator2` whose dynamic
   argument is a SciPy sparse matrix, such as a :class:`~.QubitUnitary` built from a ``csr_matrix``.
   [(#10360)](https://github.com/PennyLaneAI/pennylane/pull/10360)

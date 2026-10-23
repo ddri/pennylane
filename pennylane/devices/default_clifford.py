@@ -608,6 +608,18 @@ class DefaultClifford(Device):
         global_phase = ops.GlobalPhase(sum(op.data[0] for op in global_phase_ops))
 
         # Perform measurements based on whether shots are provided
+        if circuit.shots.has_partitioned_shots:
+            sub_seeds = np.random.default_rng(seed).integers(
+                2**31 - 1, size=circuit.shots.num_copies
+            )
+            results = []
+            for shots, sub_seed in zip(circuit.shots, sub_seeds, strict=True):
+                res = self.measure_statistical(
+                    circuit.copy(shots=shots), stim_circuit, seed=int(sub_seed)
+                )
+                results.append(res[0] if len(res) == 1 else tuple(res))
+            return tuple(results)
+
         if circuit.shots:
             meas_results = self.measure_statistical(circuit, stim_circuit, seed=seed)
         else:

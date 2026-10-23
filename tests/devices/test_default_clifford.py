@@ -265,6 +265,23 @@ def test_meas_samples(circuit, shots):
     assert qp.math.shape(samples[2]) == (shots,)
 
 
+def test_meas_shot_vector(seed):
+    """Test that a shot vector returns one result per shot partition."""
+
+    @qp.qnode(qp.device("default.clifford", seed=seed), shots=[10, (20, 2)])
+    def circuit_fn():
+        qp.Hadamard(0)
+        return qp.sample(wires=[0]), qp.counts(wires=[0]), qp.expval(qp.Z(0))
+
+    res = circuit_fn()
+    assert len(res) == 3
+    for (samples, counts, expval), shots in zip(res, [10, 20, 20]):
+        assert qp.math.shape(samples) == (shots,)
+        assert sum(counts.values()) == shots
+        assert qp.math.shape(expval) == ()
+    assert not np.array_equal(res[1][0], res[2][0])
+
+
 @pytest.mark.parametrize("tableau", [True, False])
 @pytest.mark.parametrize("shots", [None, 50000])
 @pytest.mark.parametrize(
