@@ -180,8 +180,8 @@ class TestLocalExecutor:
     @pytest.mark.parametrize(
         "fn,data,result",
         [
-            (custom_func1, range(7), [custom_func1(i) for i in range(7)]),
-            (custom_func2, range(3), list(map(lambda x: x**2, range(3)))),
+            (custom_func1, (range(7),), [custom_func1(i) for i in range(7)]),
+            (custom_func2, (range(3),), list(map(lambda x: x**2, range(3)))),
             (custom_func3, (range(3), range(3)), list(map(custom_func3, range(3), range(3)))),
             (
                 custom_func4,
@@ -205,6 +205,7 @@ class TestLocalExecutor:
     @pytest.mark.parametrize(
         "fn,data,result",
         [
+            (custom_func2, [(i,) for i in range(4)], [i**2 for i in range(4)]),
             (
                 custom_func3,
                 list(zip(range(9), np.ones(9))),

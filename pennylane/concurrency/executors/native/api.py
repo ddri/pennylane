@@ -18,7 +18,6 @@ Base API for defining an executor relying on native Python standard library impl
 """
 
 import abc
-import inspect
 from collections.abc import Callable, Sequence
 from functools import partial
 from typing import Any
@@ -78,10 +77,11 @@ class PyNativeExec(IntExec, abc.ABC):
         exec_be = self._get_backend()
         output = None
         fn_p = partial(fn, **kwargs)
-        if self._cfg.map_unpack and len(inspect.signature(fn).parameters) > 1:
+        if self._cfg.map_unpack:
             output = self._map_fn(exec_be)(fn_p, *args)
         else:
-            output = self._map_fn(exec_be)(fn_p, args)
+            # e.g. ``multiprocessing.Pool.map`` only accepts a single iterable
+            output = self._map_fn(exec_be)(fn_p, args[0])
 
         return list(output)
 

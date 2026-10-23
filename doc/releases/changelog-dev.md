@@ -2358,6 +2358,12 @@
   the gates produced by the captured decomposition.
   [(#10351)](https://github.com/PennyLaneAI/pennylane/pull/10351)
 
+* The ``map`` method of the native executors in ``pennylane.concurrency.executors.native``
+  now applies single-argument functions to each element of the iterable, like Python's built-in
+  ``map``, instead of calling the function once on the whole iterable. This also fixes ``starmap``
+  with single-argument functions for the ``concurrent.futures`` based executors.
+  [(#XXXX)](https://github.com/PennyLaneAI/pennylane/pull/XXXX)
+
 
 <h3>Contributors ✍️</h3>
 
@@ -2394,6 +2400,7 @@ Mudit Pandey,
 Andrija Paurevic,
 Francesco Pernice Botta,
 David D.W. Ren,
+David Ryan,
 Jay Soni,
 Jaume Villasante,
 Paul Haochen Wang,
