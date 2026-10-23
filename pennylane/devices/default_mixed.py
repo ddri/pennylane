@@ -23,6 +23,7 @@ import logging
 import warnings
 from collections.abc import Callable, Sequence
 from dataclasses import replace
+from functools import partial
 
 import pennylane as qp
 from pennylane.core.qscript import QuantumScript
@@ -272,6 +273,9 @@ class DefaultMixed(Device):
     ) -> Result | ResultBatch:
         if execution_config is None:
             execution_config = ExecutionConfig()
+        readout_errors = (
+            None if self.readout_err is None else [partial(qp.BitFlip, self.readout_err)]
+        )
         return tuple(
             simulate(
                 c,
@@ -279,7 +283,7 @@ class DefaultMixed(Device):
                 prng_key=self._prng_key,
                 debugger=self._debugger,
                 interface=execution_config.interface,
-                readout_errors=self.readout_err,
+                readout_errors=readout_errors,
             )
             for c in circuits
         )

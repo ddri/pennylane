@@ -22,7 +22,11 @@ from collections.abc import Callable
 from scipy.sparse import csr_matrix
 
 from pennylane import math
-from pennylane.core.measurements import MeasurementProcess, StateMeasurement
+from pennylane.core.measurements import (
+    MeasurementProcess,
+    SampleMeasurement,
+    StateMeasurement,
+)
 from pennylane.measurements import (
     DensityMatrixMP,
     ExpectationMP,
@@ -73,7 +77,8 @@ def state_diagonalizing_gates(
     for op in measurementprocess.diagonalizing_gates():
         state = apply_operation(op, state, is_state_batched=is_state_batched)
 
-    if readout_errors is not None and measurementprocess.wires is not None:
+    # readout errors only affect measurement outcomes, not e.g. the returned state
+    if readout_errors is not None and isinstance(measurementprocess, SampleMeasurement):
         for err_channel_fn in readout_errors:
             for w in measurementprocess.wires:
                 # Here, we assume err_channel_fn(w) returns a quantum operation/channel like qp.BitFlip(...)

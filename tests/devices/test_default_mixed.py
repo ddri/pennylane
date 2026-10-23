@@ -169,3 +169,37 @@ class TestDefaultMixedTrainability:
         # Check that the result is a tensor with the correct interface
         assert isinstance(result, qp.typing.TensorLike)
         assert qp.math.get_deep_interface(result) == interface
+
+
+class TestReadoutError:
+    """Tests for the readout error of DefaultMixed"""
+
+    @pytest.mark.parametrize("readout_prob", [0, 0.1, 0.5, 1])
+    @pytest.mark.parametrize("shots", [None, 10000])
+    def test_readout_error_applied(self, readout_prob, shots, seed):
+        """Test that the readout error is applied to the measurement outcomes."""
+        dev = DefaultMixed(wires=2, readout_prob=readout_prob, seed=seed)
+
+        @qp.set_shots(shots)
+        @qp.qnode(dev)
+        def circuit():
+            qp.X(1)
+            return qp.expval(qp.Z(0)), qp.probs(wires=[0, 1])
+
+        expval, probs = circuit()
+        p = readout_prob
+        atol = 1e-8 if shots is None else 0.03
+        assert qp.math.allclose(expval, 1 - 2 * p, atol=2 * atol)
+        assert qp.math.allclose(probs, [(1 - p) * p, (1 - p) ** 2, p**2, p * (1 - p)], atol=atol)
+
+    def test_readout_error_not_applied_to_state(self):
+        """Test that the readout error is not applied to state measurements."""
+        dev = DefaultMixed(wires=1, readout_prob=0.1)
+
+        @qp.qnode(dev)
+        def circuit():
+            return qp.density_matrix(wires=[0])
+
+        with pytest.warns(UserWarning, match="not affected by readout error"):
+            res = circuit()
+        assert qp.math.allclose(res, [[1, 0], [0, 0]])

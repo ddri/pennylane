@@ -2358,6 +2358,11 @@
   the gates produced by the captured decomposition.
   [(#10351)](https://github.com/PennyLaneAI/pennylane/pull/10351)
 
+* ``default.mixed`` no longer raises a ``TypeError`` when executing circuits with ``readout_prob``
+  set. The readout error is applied to measurement outcomes, but not to state measurements such
+  as :func:`~.density_matrix`.
+  [(#XXXX)](https://github.com/PennyLaneAI/pennylane/pull/XXXX)
+
 
 <h3>Contributors ✍️</h3>
 
@@ -2394,6 +2399,7 @@ Mudit Pandey,
 Andrija Paurevic,
 Francesco Pernice Botta,
 David D.W. Ren,
+David Ryan,
 Jay Soni,
 Jaume Villasante,
 Paul Haochen Wang,
