@@ -157,7 +157,7 @@ class SProd(ScalarSymbolicOp):
         """The label produced for the SProd op."""
         scalar_val = (
             f"{self.scalar}"
-            if decimals is None
+            if decimals is None or math.ndim(self.scalar) > 0
             else format(math.toarray(self.scalar), f".{decimals}f")
         )
 

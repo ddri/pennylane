@@ -2358,6 +2358,10 @@
   the gates produced by the captured decomposition.
   [(#10351)](https://github.com/PennyLaneAI/pennylane/pull/10351)
 
+* :class:`~.SProd` with a batched coefficient no longer raises an error when its label is
+  computed with ``decimals``, e.g. when drawing a circuit with :func:`~.draw`.
+  [(#XXXX)](https://github.com/PennyLaneAI/pennylane/pull/XXXX)
+
 
 <h3>Contributors ✍️</h3>
 

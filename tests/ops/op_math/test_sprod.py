@@ -723,6 +723,14 @@ class TestProperties:
         assert op.label(decimals=2, cache=cache) == "-1.20*U\n(M0)"
         assert len(cache["matrices"]) == 1
 
+    def test_label_batched_scalar(self):
+        """Test that the label method works with a batched scalar."""
+        op = s_prod(np.array([1.234, 2.345]), qp.PauliX(0))
+        assert op.label(decimals=2) == "[1.234 2.345]*X"
+
+        tape = qp.tape.QuantumScript([], [qp.expval(op)])
+        assert qp.drawer.tape_text(tape, decimals=2) == "0: ───┤  <[1.234 2.345]*X>"
+
     op_pauli_reps = (
         (
             qp.s_prod(1.23, qp.PauliZ(wires=0)),
