@@ -981,6 +981,34 @@ class TestMeasurementsFromCountsOrSamples:
         assert len(sample_res) == len(sample_expected)
         assert set(np.array(sample_res)) == set(sample_expected)
 
+    @pytest.mark.parametrize(
+        "meas_transform", (measurements_from_counts, measurements_from_samples)
+    )
+    @pytest.mark.parametrize("shots", [3000, (3000, 3500)])
+    def test_broadcasting(self, meas_transform, shots, seed):
+        """Test that measurements_from_counts/measurements_from_samples work with parameter
+        broadcasting, with and without partitioned shots."""
+
+        theta = np.array([0.5, 2.5])
+        dev = qp.device("default.qubit", wires=1, seed=seed)
+
+        tape = qp.tape.QuantumScript(
+            [qp.RX(theta, 0)],
+            measurements=[qp.probs(wires=[0]), qp.expval(qp.Z(0)), qp.counts(wires=[0])],
+            shots=shots,
+        )
+        tapes, fn = meas_transform(tape)
+        res = fn(qp.execute(tapes, device=dev))
+
+        shot_results = res if tape.shots.has_partitioned_shots else [res]
+        assert len(shot_results) == tape.shots.num_copies
+        for probs_res, expval_res, counts_res in shot_results:
+            expected_probs = np.stack([np.cos(theta / 2) ** 2, np.sin(theta / 2) ** 2], axis=-1)
+            assert np.allclose(probs_res, expected_probs, atol=0.05)
+            assert np.allclose(expval_res, np.cos(theta), atol=0.05)
+            assert len(counts_res) == 2
+            assert all(isinstance(c, dict) for c in counts_res)
+
     @pytest.mark.parametrize("shots", [None, 10])
     @pytest.mark.parametrize(
         "meas_transform", (measurements_from_counts, measurements_from_samples)

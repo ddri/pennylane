@@ -2358,6 +2358,10 @@
   the gates produced by the captured decomposition.
   [(#10351)](https://github.com/PennyLaneAI/pennylane/pull/10351)
 
+* :func:`~.devices.preprocess.measurements_from_counts` no longer raises an error when
+  postprocessing the results of a broadcasted tape.
+  [(#XXXX)](https://github.com/PennyLaneAI/pennylane/pull/XXXX)
+
 
 <h3>Contributors ✍️</h3>
 
@@ -2394,6 +2398,7 @@ Mudit Pandey,
 Andrija Paurevic,
 Francesco Pernice Botta,
 David D.W. Ren,
+David Ryan,
 Jay Soni,
 Jaume Villasante,
 Paul Haochen Wang,
