@@ -2098,6 +2098,10 @@
 
 <h3>Bug fixes 🐛</h3>
 
+* :class:`~.estimator.FirstQuantization` now raises a clear ``ValueError`` when the number of
+  electrons is 1, instead of failing with ``cannot convert float NaN to integer``.
+  [(#XXXX)](https://github.com/PennyLaneAI/pennylane/pull/XXXX)
+
 * :func:`~.core.abstractify` no longer raises an error for an :class:`~.Operator2` whose dynamic
   argument is a SciPy sparse matrix, such as a :class:`~.QubitUnitary` built from a ``csr_matrix``.
   [(#10360)](https://github.com/PennyLaneAI/pennylane/pull/10360)

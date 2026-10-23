@@ -269,6 +269,12 @@ def test_norm_error(n, eta, omega, error, br, charge):
         qp.estimator.FirstQuantization.norm(n, eta, omega, error, br, charge)
 
 
+def test_single_electron_error():
+    r"""Test that an error is raised for a single electron."""
+    with pytest.raises(ValueError, match="The number of electrons must be at least 2"):
+        qp.estimator.FirstQuantization(1000, 1, omega=100.0)
+
+
 @pytest.mark.parametrize(
     ("n", "eta", "omega", "vectors", "lamb", "g_cost", "q_cost"),
     [

@@ -323,6 +323,9 @@ class FirstQuantization(Operation):
         if eta <= 0 or not isinstance(eta, (int, np.integer)):
             raise ValueError("The number of electrons must be a positive integer.")
 
+        if eta == 1:
+            raise ValueError("The number of electrons must be at least 2.")
+
         if omega <= 0:
             raise ValueError("The unit cell volume must be a positive number.")
 
